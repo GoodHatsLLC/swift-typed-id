@@ -1,32 +1,38 @@
-# `TypedID`
+# `swift-typed-id`
 
-`TypedID` turns otherwise dangerously interchangeable IDs backed by common values types like `String` into compiler differentiated, self-documenting, types like `UserID`.   
+## *`“Make your IDs type-safe with this One Simple Trick.”`*
 
-Add type-safety to your IDs with one trivial conformance.
+Turn interchangeable ID types like `UUID` or `String` into
+types differentiated at compile time — like `UserID` and `DeviceID`.
 
 ## Usage
 
-1. Add the SwiftPM dependency to your project:
+1. Adding the dependency to your target:
 
 ```swift
-.package(url: "https://github.com/adam-zethraeus/TypedID.git", from: "1.0.0")
+/// Package.swift, top-level
+dependencies: [
+    .package(url: "https://github.com/GoodHatsLLC/swift-typed-id.git", from: "1.1.0"),
+],
+
+/// Package.swift, in targets
+.target(
+    name: "MyTarget",
+    dependencies: [
+        .product(name: "TypedID", package: "swift-typed-id")
+    ]
+)
 ```
 
-2. Import the library:
+2. Using the library:
 
 ```swift
-import TypeID
-```
+import TypedID
 
-3. Define your unique ID type:
-
-```swift
-struct UserID: TypedID {
+struct MyCustomID: TypedID {
   let raw: String
 }
 ```
-
-Working with the resulting ID type is intuitive:
 
 ```swift
 let myID = UserID("usr99999")
@@ -41,10 +47,9 @@ let users = Set([myID, otherID])
 // Codability
 let encoded = try JSONEncoder().encode(myID)
 let decoded = String(data: encoded, encoding: .utf8)
-// TypedID is totally transparent. Serialized values remain the same.
+// The encoding is transparent. Serialized values remain the same.
 assert(decoded == "usr99999")
 ```
 
-
-
-`TypeID` works with common ID types, including `String`, `Int`, `UUID`, `UInt`, `Double` — but see the conformance for Foundation's `UUID` if you'd like to make new types conform.
+`TypeID` works with common ID types, including `String`, `Int`, `UUID`, `UInt`, `Double`. 
+Adding new types is simple. See `UUID` for an example.
